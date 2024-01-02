@@ -6,13 +6,13 @@ import cv2
 class Interface(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Расшифровка текста")
+        self.setWindowTitle("Распознавание текста")
         self.setWindowIcon(QtGui.QIcon('icon.png'))
         self.image_label = QtWidgets.QLabel(self)
         self.load_button = QtWidgets.QPushButton("Выбрать изображение", self)
         self.load_button.clicked.connect(self.image_loade)
-        self.decode_button = QtWidgets.QPushButton("Расшифровать", self)
-        self.decode_button.clicked.connect(self.text_decode)
+        self.decode_button = QtWidgets.QPushButton("Распознать", self)
+        self.decode_button.clicked.connect(self.text_recognize)
 
         layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(self.image_label)
@@ -29,7 +29,7 @@ class Interface(QtWidgets.QWidget):
             self.image_label.setScaledContents(True)
 
 
-    def text_decode(self):
+    def text_recognize(self):
         pixmap = self.image_label.pixmap()
         if pixmap:
             image = pixmap.toImage()

@@ -35,7 +35,7 @@ class Interface(QtWidgets.QWidget):
             image = pixmap.toImage()
             image.save("temp.png")
             img = cv2.imread("temp.png")
-            reader = easyocr.Reader(["ru"])
+            reader = easyocr.Reader(["ru", "en"])
             resault = reader.readtext(img, detail=0, paragraph=True)
 
             with open("result.txt", "w") as file:

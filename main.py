@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets, QtGui
 import easyocr
 import os
 import cv2
+import interface
 
 class Interface(QtWidgets.QWidget):
     def __init__(self):

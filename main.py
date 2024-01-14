@@ -16,7 +16,7 @@ class Interface(QtWidgets.QWidget):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.center()
 
-        #основной фрейм на котором все кнопки, лайбл и фрейм 3
+        # основной фрейм на котором все кнопки, лайбл и фрейм 3
         self.frame_4 = QtWidgets.QFrame(self)
         self.frame_4.setGeometry(QtCore.QRect(0, 0, 728, 700))
         self.frame_4.setStyleSheet("QFrame{\n"
@@ -28,7 +28,7 @@ class Interface(QtWidgets.QWidget):
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
 
 
-        #фрейм на котором кнопки закрыть и свернуть
+        # фрейм на котором кнопки закрыть и свернуть
         self.frame_3 = QtWidgets.QFrame(self.frame_4)
         self.frame_3.setGeometry(QtCore.QRect(0, 0, 728, 30))
         self.frame_3.setStyleSheet("QFrame{\n"
@@ -40,7 +40,7 @@ class Interface(QtWidgets.QWidget):
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
 
 
-        #кнопка закрытия
+        # кнопка закрытия
         self.pushButton_1 = QtWidgets.QPushButton("X", self.frame_3)
         self.pushButton_1.setGeometry(QtCore.QRect(687, 0, 41, 30))
         font = QtGui.QFont()
@@ -65,7 +65,7 @@ class Interface(QtWidgets.QWidget):
                                         "}")
         self.pushButton_1.clicked.connect(lambda: self.close())
 
-        #кнопка сворачиванья
+        # кнопка сворачиванья
         self.pushButton_2 = QtWidgets.QPushButton("_", self.frame_3)
         self.pushButton_2.setGeometry(QtCore.QRect(646, 0, 41, 31))
         font = QtGui.QFont()
@@ -90,13 +90,13 @@ class Interface(QtWidgets.QWidget):
         self.pushButton_2.setDefault(False)
         self.pushButton_2.clicked.connect(lambda: self.showMinimized())
 
-        #дроп и драг
+        # дроп и драг
        # self.listvig = QtWidgets.QListWidget(self)
        # self.listvig.setGeometry(QtCore.QRect(-150, 50, 1100,1100))
        # self.listvig.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
 
 
-        #лайбл
+        # лайбл
         self.image_label = QtWidgets.QLabel(self.frame_4)
         self.image_label.setGeometry(QtCore.QRect(0, 30, 729, 556))
         image = QtGui.QPixmap("icon/download.png")
@@ -104,7 +104,7 @@ class Interface(QtWidgets.QWidget):
         self.image_label.setScaledContents(True)
         self.image_label.setWordWrap(False)
 
-        #кнопка выбрать изображение
+        # кнопка выбрать изображение
         self.load_button = QtWidgets.QPushButton("Выбрать изображение", self.frame_4)
         self.load_button.setGeometry(QtCore.QRect(10, 610, 261, 30))
         font = QtGui.QFont()
@@ -183,7 +183,7 @@ class Interface(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(self.frame_4)
 
-        #кнопка ru и en и лейб выбора языка
+        # кнопка ru и en и лейб выбора языка
         self.lang_sel = QtWidgets.QLabel("Язык текста:", self.frame_4)
         self.lang_sel.setGeometry(QtCore.QRect(450, 620, 271, 21))
         font = QtGui.QFont()
@@ -270,7 +270,7 @@ class Interface(QtWidgets.QWidget):
         print("вв")
 
 
-    def translator(self, ru_button):
+    def translator(self):
         pixmap = self.image_label.pixmap()
         if pixmap:
             image = pixmap.toImage()
@@ -278,7 +278,6 @@ class Interface(QtWidgets.QWidget):
             img = cv2.imread("temp.png")
             reader = easyocr.Reader(["ru", "en"])
             resault = reader.readtext(img, detail=0, paragraph=True)
-
 
             with open("result.txt", "w") as file:
                 for line in resault:
@@ -289,14 +288,12 @@ class Interface(QtWidgets.QWidget):
 
             if self.ru_button.isChecked() == True:
                 self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="ru", to_language="en")
-
                 with open("translation.txt", "w") as file:
                     for line in self.trans_resault:
                         file.write(f"{line}")
 
             elif self.en_button.isChecked() == True:
                 self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="en", to_language="ru")
-
                 with open("translation.txt", "w") as file:
                     for line in self.trans_resault:
                         file.write(f"{line}")

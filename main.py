@@ -90,12 +90,6 @@ class Interface(QtWidgets.QWidget):
         self.pushButton_2.setDefault(False)
         self.pushButton_2.clicked.connect(lambda: self.showMinimized())
 
-        # дроп и драг
-       # self.listvig = QtWidgets.QListWidget(self)
-       # self.listvig.setGeometry(QtCore.QRect(-150, 50, 1100,1100))
-       # self.listvig.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-
-
         # лайбл
         self.image_label = QtWidgets.QLabel(self.frame_4)
         self.image_label.setGeometry(QtCore.QRect(0, 30, 729, 556))
@@ -103,6 +97,7 @@ class Interface(QtWidgets.QWidget):
         self.image_label.setPixmap(image)
         self.image_label.setScaledContents(True)
         self.image_label.setWordWrap(False)
+        self.setAcceptDrops(True)
 
         # кнопка выбрать изображение
         self.load_button = QtWidgets.QPushButton("Выбрать изображение", self.frame_4)
@@ -180,6 +175,7 @@ class Interface(QtWidgets.QWidget):
                                        "}")
         self.decode_translate.clicked.connect(self.translator)
 
+        # лайот
         layout = QtWidgets.QVBoxLayout(self)
         layout.addWidget(self.frame_4)
 
@@ -263,12 +259,19 @@ class Interface(QtWidgets.QWidget):
 
 
     def dropEvent(self, event):
-        print('drop')
-    def dragMoveEvent(self, event):
-        print('move')
-    def dragEnterEvent(self, event):
-        print("вв")
+        if event.mimeData().hasImage:
+            event.setDropAction(QtCore.Qt.CopyAction)
+            file_path = event.mimeData().urls()[0].toLocalFile()
+            self.image_label.setPixmap(QtGui.QPixmap(file_path))
+            event.accept()
+        else:
+            event.ignore()
 
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasImage:
+            event.accept()
+        else:
+            event.ignore()
 
     def translator(self):
         pixmap = self.image_label.pixmap()
@@ -288,14 +291,12 @@ class Interface(QtWidgets.QWidget):
 
             if self.ru_button.isChecked() == True:
                 self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="ru", to_language="en")
-                with open("translation.txt", "w") as file:
-                    for line in self.trans_resault:
-                        file.write(f"{line}")
 
             elif self.en_button.isChecked() == True:
                 self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="en", to_language="ru")
-                with open("translation.txt", "w") as file:
-                    for line in self.trans_resault:
+
+            with open("translation.txt", "w") as file:
+                for line in self.trans_resault:
                         file.write(f"{line}")
 
             os.remove("result.txt")

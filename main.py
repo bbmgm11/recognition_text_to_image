@@ -3,17 +3,19 @@ import easyocr
 import os
 import cv2
 import translators
+from PIL import ImageGrab
 
 
 class Interface(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Распознавание текста")
-        self.resize(750,700)
+        self.resize(750, 700)
 
         self.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.setAcceptDrops(True)
         self.center()
 
         # основной фрейм на котором все кнопки, лайбл и фрейм 3
@@ -27,7 +29,6 @@ class Interface(QtWidgets.QWidget):
         self.frame_4.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_4.setFrameShadow(QtWidgets.QFrame.Raised)
 
-
         # фрейм на котором кнопки закрыть и свернуть
         self.frame_3 = QtWidgets.QFrame(self.frame_4)
         self.frame_3.setGeometry(QtCore.QRect(0, 0, 728, 30))
@@ -38,7 +39,6 @@ class Interface(QtWidgets.QWidget):
                                    "}")
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
-
 
         # кнопка закрытия
         self.pushButton_1 = QtWidgets.QPushButton("X", self.frame_3)
@@ -65,7 +65,7 @@ class Interface(QtWidgets.QWidget):
                                         "}")
         self.pushButton_1.clicked.connect(lambda: self.close())
 
-        # кнопка сворачиванья
+        # кнопка сворачивания
         self.pushButton_2 = QtWidgets.QPushButton("_", self.frame_3)
         self.pushButton_2.setGeometry(QtCore.QRect(646, 0, 41, 31))
         font = QtGui.QFont()
@@ -97,7 +97,6 @@ class Interface(QtWidgets.QWidget):
         self.image_label.setPixmap(image)
         self.image_label.setScaledContents(True)
         self.image_label.setWordWrap(False)
-        self.setAcceptDrops(True)
 
         # кнопка выбрать изображение
         self.load_button = QtWidgets.QPushButton("Выбрать изображение", self.frame_4)
@@ -123,8 +122,7 @@ class Interface(QtWidgets.QWidget):
                                        "}")
         self.load_button.clicked.connect(self.image_loade)
 
-
-        # кнопка распознования
+        # кнопка распознавания
         self.decode_button = QtWidgets.QPushButton("Распознать", self.frame_4)
         self.decode_button.setGeometry(QtCore.QRect(10, 650, 261, 30))
         font = QtGui.QFont()
@@ -134,18 +132,18 @@ class Interface(QtWidgets.QWidget):
         self.decode_button.setFont(font)
         self.decode_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.decode_button.setStyleSheet("QPushButton{\n"
-                                       "    color: white;\n"
-                                       "    border-radius: 7px;\n"
-                                       "    background-color: #6495ed;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:hover{\n"
-                                       "    background-color: #50566E;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:pressed{\n"
-                                       "    background-color: #434965;\n"
-                                       "}")
+                                         "    color: white;\n"
+                                         "    border-radius: 7px;\n"
+                                         "    background-color: #6495ed;\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:hover{\n"
+                                         "    background-color: #50566E;\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:pressed{\n"
+                                         "    background-color: #434965;\n"
+                                         "}")
         self.decode_button.clicked.connect(self.text_recognize)
 
         layout = QtWidgets.QVBoxLayout(self)
@@ -161,18 +159,18 @@ class Interface(QtWidgets.QWidget):
         self.decode_translate.setFont(font)
         self.decode_translate.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.decode_translate.setStyleSheet("QPushButton{\n"
-                                       "    color: white;\n"
-                                       "    border-radius: 7px;\n"
-                                       "    background-color: #6495ed;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:hover{\n"
-                                       "    background-color: #50566E;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:pressed{\n"
-                                       "    background-color: #434965;\n"
-                                       "}")
+                                            "    color: white;\n"
+                                            "    border-radius: 7px;\n"
+                                            "    background-color: #6495ed;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:hover{\n"
+                                            "    background-color: #50566E;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:pressed{\n"
+                                            "    background-color: #434965;\n"
+                                            "}")
         self.decode_translate.clicked.connect(self.translator)
 
         # лайот
@@ -192,9 +190,9 @@ class Interface(QtWidgets.QWidget):
         font.setPointSize(12)
         self.ru_button.setFont(font)
         self.ru_button.setStyleSheet("QRadioButton{\n"
-                                         "    color: white;\n"
-                                         "    border-radius: 7px;\n"
-                                         "}")
+                                     "    color: white;\n"
+                                     "    border-radius: 7px;\n"
+                                     "}")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("icon/Russia.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ru_button.setIcon(icon1)
@@ -206,24 +204,31 @@ class Interface(QtWidgets.QWidget):
         font.setPointSize(12)
         self.en_button.setFont(font)
         self.en_button.setStyleSheet("QRadioButton{\n"
-                                         "    color: white;\n"
-                                         "    border-radius: 7px;\n"
-                                         "}")
+                                     "    color: white;\n"
+                                     "    border-radius: 7px;\n"
+                                     "}")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icon/UnitedKingdom.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.en_button.setIcon(icon)
 
+        # контр в + контрл с
+        self.shortcut_open = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+V"), self)
+        self.shortcut_open.activated.connect(self.pasteImage)
 
+        self.clipboard = QtWidgets.QApplication.clipboard()
+        self.clipboard.setPixmap(QtGui.QPixmap())
+
+    # загрузка изображения через кнопку
     def image_loade(self):
         file_dealog = QtWidgets.QFileDialog()
-        file_puth, _ = file_dealog.getOpenFileName(self, "Выбeрите изображение")
+        file_puth, _ = file_dealog.getOpenFileName(self, "Выберите изображение")
 
         if file_puth:
             pixmap = QtGui.QPixmap(file_puth)
             self.image_label.setPixmap(pixmap)
             self.image_label.setScaledContents(True)
 
-
+    # распознавание
     def text_recognize(self):
         pixmap = self.image_label.pixmap()
         if pixmap:
@@ -254,10 +259,11 @@ class Interface(QtWidgets.QWidget):
             delta = QtCore.QPoint(event.globalPos() - self.oldPos)
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.oldPos = event.globalPos()
+
         except AttributeError:
             pass
 
-
+    # дроп
     def dropEvent(self, event):
         if event.mimeData().hasImage:
             event.setDropAction(QtCore.Qt.CopyAction)
@@ -273,6 +279,7 @@ class Interface(QtWidgets.QWidget):
         else:
             event.ignore()
 
+    #  перевод
     def translator(self):
         pixmap = self.image_label.pixmap()
         if pixmap:
@@ -290,19 +297,31 @@ class Interface(QtWidgets.QWidget):
                 file_content = file.read()
 
             if self.ru_button.isChecked() == True:
-                self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="ru", to_language="en")
+                self.trans_resault = translators.translate_text(query_text=file_content, translator="google",
+                                                                from_language="ru", to_language="en")
 
             elif self.en_button.isChecked() == True:
-                self.trans_resault = translators.translate_text(query_text=file_content, translator="google", from_language="en", to_language="ru")
+                self.trans_resault = translators.translate_text(query_text=file_content, translator="google",
+                                                                from_language="en", to_language="ru")
 
             with open("translation.txt", "w") as file:
                 for line in self.trans_resault:
-                        file.write(f"{line}")
+                    file.write(f"{line}")
 
             os.remove("result.txt")
             os.startfile("translation.txt")
             os.remove("temp.png")
 
+    def pasteImage(self):
+        img = ImageGrab.grabclipboard()
+        print(img)
+
+    #   pixmap = QtGui.QPixmap(img)
+    #   self.image_label.setPixmap(img)
+    #   self.image_label.setScaledContents(True)
+
+    def closeApp(self):
+        app.quit()
 
 
 if __name__ == "__main__":
